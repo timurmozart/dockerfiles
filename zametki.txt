@@ -1,0 +1,4 @@
+
+docker stop cnp ; docker build --rm -t mozartua/nginx-php:centos centos-7/nginx-php/ && docker run -id --rm --name cnp -p 80:80 mozartua/nginx-php:centos
+docker stop cnp ; docker build --rm -t mozartua/nginx-php:centos centos-7/nginx-php/ && docker run -id --rm --name cnp -p 80:80 mozartua/nginx-php:centos && docker exec -it cnp bash
+nginx mc php-fpm php-cli php-mysql php-gd php-ldap php-odbc php-pdo php-pecl-memcache php-pear php-xml php-xmlrpc php-mbstring php-snmp php-soap
