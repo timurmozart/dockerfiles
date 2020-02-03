@@ -1,10 +1,19 @@
 FROM centos:centos7
 ENV APPS \
     nginx \
-    php-fpm \
     php-cli \
-    php-mcrypt \
-    memcached 
+    php-fpm \
+    php-mysql \
+    php-json \
+    php-opcache \
+    php-mbstring \
+    php-xml \
+    php-gd \
+    php-curl
+
+
+
+
 RUN yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm -y \
  && yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y  \
  && yum install yum-utils -y  \

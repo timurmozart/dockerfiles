@@ -1,4 +1,4 @@
-
-docker stop cnp ; docker build --rm -t mozartua/nginx-php:centos centos-7/nginx-php/ && docker run -id --rm --name cnp -p 80:80 mozartua/nginx-php:centos
-docker stop cnp ; docker build --rm -t mozartua/nginx-php:centos centos-7/nginx-php/ && docker run -id --rm --name cnp -p 80:80 mozartua/nginx-php:centos && docker exec -it cnp bash
-nginx mc php-fpm php-cli php-mysql php-gd php-ldap php-odbc php-pdo php-pecl-memcache php-pear php-xml php-xmlrpc php-mbstring php-snmp php-soap
+docker kill cnp ; docker build -t mozartua/nginx-php:centos --rm /mnt/host_machine/Dockerfiles/centos-7/nginx-php/ && docker run --name cnp --rm -idt -p 81:80 mozartua/nginx-php:centos
+docker kill anp ; docker build -t mozartua/nginx-php:alpine --rm /mnt/host_machine/Dockerfiles/alpine/nginx-php/ && docker run --name anp --rm -itd -p 81:80 mozartua/nginx-php:alpine
+docker kill cnps ; docker build -t mozartua/source-nginx-php:centos --rm /mnt/host_machine/Dockerfiles/centos-7/nginx-php-from-source/ && docker run --name cnps --rm -itd -p 80:80 mozartua/source-nginx-php:centos
+docker kill unp ; docker build -t mozartua/nginx-php:ubuntu --rm /mnt/host_machine/Dockerfiles/ubuntu/nginx-php/ && docker run --name unp --rm -id -p 80:80 mozartua/nginx-php:ubuntu
