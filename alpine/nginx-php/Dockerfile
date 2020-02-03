@@ -41,7 +41,7 @@ COPY ./copy/ /files
 RUN cp /files/nginx.conf /etc/nginx/nginx.conf \
  && cp /files/index.html /www/index.html \
  && cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
- && cp /files/phpinfo.php /www/phpinfo.php \
+ && cp /files/info.php /www/info.php \
  && cp -f /files/www.conf /etc/php7/php-fpm.d/www.conf \
  && cp -f /files/php.ini /etc/php7/php.ini
 EXPOSE 80

@@ -9,7 +9,7 @@ if [ $status -ne 0 ]; then
 fi
 
 # Start the second process
-php-fpm -D
+php-fpm
 status=$?
 if [ $status -ne 0 ]; then
   echo "Failed to start my_second_process: $status"
