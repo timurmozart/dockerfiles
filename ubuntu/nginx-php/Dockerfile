@@ -1,43 +1,26 @@
-# My base ubuntu image
-
 FROM ubuntu:18.04
+# ENV APPS \
+#     nginx \
+#     php-fpm \
+#     php-cli \
+#     php-mcrypt \
+#     memcached 
+RUN apt-get update -y
+RUN apt-get upgrade -y
+RUN apt-get install nginx -y
+RUN apt-get install software-properties-common -y
+RUN add-apt-repository ppa:ondrej/php -y
+RUN apt-get update -y
+RUN apt-get install php7.3-fpm -y
+# RUN apt-get install vim -y
+# RUN apt-get install -y mc
+RUN sed -i 's/listen = \/run\/php\/php7.3-fpm.sock/listen = 127.0.0.1:9000/g' /etc/php/7.3/fpm/pool.d/www.conf
+# RUN sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/g' /etc/ssh/sshd_config
 
-ENV TZ=Europe/Kiev
-ENV PHP_V 7.3
-ENV SOFT nginx \
-  supervisor \
-  php${PHP_V}-fpm \
-  php${PHP_V}-common \
-  php${PHP_V}-mysql \
-  php${PHP_V}-xml \
-  php${PHP_V}-xmlrpc \
-  php${PHP_V}-curl \
-  php${PHP_V}-gd \
-  php${PHP_V}-imagick \
-  php${PHP_V}-cli \
-  php${PHP_V}-dev \
-  php${PHP_V}-imap \
-  php${PHP_V}-mbstring \
-  php${PHP_V}-opcache \
-  php${PHP_V}-soap \
-  php${PHP_V}-zip \
-  php${PHP_V}-intl \
-  curl \
-  mc \
-  wget
-
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
-  && apt-get update && apt upgrade -y \
-  && apt-get install software-properties-common -y \
-  && add-apt-repository ppa:ondrej/php -y \
-  && apt-get update && apt-get upgrade -y \
-  && apt-get install ${SOFT} -y \
-  && sed -i 's+/run/php/php7.3-fpm.sock+127.0.0.1:9000+g' /etc/php/7.3/fpm/pool.d/www.conf \
-  && apt-get clean
-
-COPY default /etc/nginx/sites-available/
-COPY test.php /var/www/html/
-COPY supervisord.conf /
+RUN mkdir /run/php/
+COPY source/default /etc/nginx/sites-available/default
+COPY source/info.php /var/www/html/info.php
+COPY source/start.sh /root/start.sh
 
 EXPOSE 80
-ENTRYPOINT ["/usr/bin/supervisord", "-c", "/supervisord.conf"]
+CMD [ "/root/start.sh" ]
