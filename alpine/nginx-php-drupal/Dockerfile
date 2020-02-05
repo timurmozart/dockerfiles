@@ -2,25 +2,32 @@ FROM alpine:latest
 ENV TIMEZONE="Europe/Kiev"
 ENV APKS \
     nginx \  
-    # php-cli \
-    php-fpm 
-    # php-mysqli \
-    # php-json \
-    # php-opcache \
-    # php-mbstring \
-    # php-xml \
-    # php-gd \
-    # php-curl
+    php-cli \
+    php-fpm \
+    php-mysqli \
+    php-json \
+    php-opcache \
+    php-mbstring \
+    php-xml \
+    php-gd \
+    php-curl \
+    php-dom \
+    php-pdo \
+    php-pdo_mysql \
+    php-session \
+    php-simplexml \
+    php-tokenizer 
+    # git \
+    # composer
 
 
 ADD https://dl.bintray.com/php-alpine/key/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
 RUN apk --update add ca-certificates \
  && echo "https://dl.bintray.com/php-alpine/v3.9/php-7.3" >> /etc/apk/repositories \
  && apk add -U --no-cache ${APKS} \
- && adduser -D -g 'www' www \
  && mkdir /www \
- && mkdir /run/nginx/ \
- && mkdir /run/php-fpm7/ \
+#  && mkdir /run/nginx/ \
+#  && mkdir /run/php-fpm7/ \
  && chown -R nginx:nginx /var/lib/nginx \
  && chown -R nginx:nginx /www \
  && chown -R nginx:nginx /var/log/nginx \
@@ -36,7 +43,10 @@ RUN cp /files/nginx.conf /etc/nginx/nginx.conf \
  && cp /files/info.php /www/info.php \
  && cp -f /files/www.conf /etc/php7/php-fpm.d/www.conf \
  && cp -f /files/php.ini /etc/php7/php.ini
-USER nginx
+# RUN composer create-project drupal-composer/drupal-project:8.x-dev /www/drupal --no-interaction
+RUN chown -R nginx:nginx /www/
+# RUN cd /www/drupal && 'yes' | vendor/bin/drush site-install --db-url=mysql://drupaluser:change-with-strong-password@mysql/drupal
 EXPOSE 8080
-
+USER nginx
+VOLUME [ "/www" ]
 CMD [ "/files/start.sh" ]

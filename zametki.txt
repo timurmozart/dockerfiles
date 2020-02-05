@@ -1,4 +1,16 @@
-docker kill cnp ; docker build -t mozartua/nginx-php:centos --rm /mnt/host_machine/Dockerfiles/centos-7/nginx-php/ && docker run --name cnp --rm -idt -p 81:80 mozartua/nginx-php:centos
-docker kill anp ; docker build -t mozartua/nginx-php:alpine --rm /mnt/host_machine/Dockerfiles/alpine/nginx-php/ && docker run --name anp --rm -itd -p 81:80 mozartua/nginx-php:alpine
+docker kill cnp ; time docker build -t mozartua/nginx-php:centos --rm /mnt/host_machine/Dockerfiles/centos-7/nginx-php/ && docker run --name cnp --rm -idt -p 81:80 mozartua/nginx-php:centos
+docker kill anp ; docker build -t mozartua/nginx-php:alpine --rm /mnt/host_machine/Dockerfiles/alpine/nginx-php/ && docker run --name anp --rm -itd -p 82:80 mozartua/nginx-php:alpine
+docker kill unp ; time docker build -t mozartua/nginx-php:ubuntu --rm /mnt/host_machine/Dockerfiles/ubuntu/nginx-php/ && docker run --name unp --rm -itd -p 80:80 mozartua/nginx-php:ubuntu
 docker kill cnps ; docker build -t mozartua/source-nginx-php:centos --rm /mnt/host_machine/Dockerfiles/centos-7/nginx-php-from-source/ && docker run --name cnps --rm -itd -p 80:80 mozartua/source-nginx-php:centos
-docker kill unp ; docker build -t mozartua/nginx-php:ubuntu --rm /mnt/host_machine/Dockerfiles/ubuntu/nginx-php/ && docker run --name unp --rm -id -p 80:80 mozartua/nginx-php:ubuntu
+docker run --name mysql -id -e MYSQL_ROOT_PASSWORD=ASdf456+ mysql:latest
+docker kill cnpd ; time docker build -t mozartua/nginx-php-drupal:centos --rm /mnt/host_machine/Dockerfiles/centos-7/nginx-php-drupal/ && docker run --name cnpd --rm -idt -p 80:80 mozartua/nginx-php-drupal:centos
+watch 'docker ps -a --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"'
+docker kill mysql; docker run --rm --name mysql -e MYSQL_ROOT_PASSWORD=ASdf456+ -e MYSQL_USER=drupaluser -e MYSQL_PASSWORD=change-with-strong-password -d mysql/mysql-server:latest
+
+CREATE DATABASE drupal CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+ALTER USER 'drupaluser'@'%' IDENTIFIED WITH mysql_native_password BY 'change-with-strong-password';  
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES ON drupal.* TO 'drupaluser'@'%';
+
+docker kill cnpd ; time docker build -t mozartua/nginx-php-drupal:centos --rm /mnt/host_machine/Dockerfiles/centos-7/nginx-php-drupal/ && docker run --name cnp --rm -idt -p 80:80 mozartua/nginx-php-drupal:centos
+
+docker kill anpd ; docker build -t mozartua/nginx-php-drupal:alpine --rm /mnt/host_machine/Dockerfiles/alpine/nginx-php-drupal/ && docker run --name anpd --link mysql:mysql --rm -v ~/volumes/www:/www1 -itd -p 80:8080 mozartua/nginx-php-drupal:alpine
