@@ -16,9 +16,10 @@ ENV APKS \
     php-pdo_mysql \
     php-session \
     php-simplexml \
-    php-tokenizer 
-    # git \
-    # composer
+    php-tokenizer \
+    git \
+    mc \
+    composer
 
 
 ADD https://dl.bintray.com/php-alpine/key/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
@@ -43,10 +44,11 @@ RUN cp /files/nginx.conf /etc/nginx/nginx.conf \
  && cp /files/info.php /www/info.php \
  && cp -f /files/www.conf /etc/php7/php-fpm.d/www.conf \
  && cp -f /files/php.ini /etc/php7/php.ini
-# RUN composer create-project drupal-composer/drupal-project:8.x-dev /www/drupal --no-interaction
+RUN composer create-project drupal-composer/drupal-project:8.x-dev /www/drupal --no-interaction
 RUN chown -R nginx:nginx /www/
 # RUN cd /www/drupal && 'yes' | vendor/bin/drush site-install --db-url=mysql://drupaluser:change-with-strong-password@mysql/drupal
 EXPOSE 8080
-USER nginx
-VOLUME [ "/www" ]
+VOLUME [ "/www1" ]
+RUN cp -a /www /www1
+# USER nginx
 CMD [ "/files/start.sh" ]

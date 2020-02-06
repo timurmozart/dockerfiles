@@ -1,24 +1,25 @@
-FROM alpine:latest
+FROM mysql/mysql-server:latest
 
-RUN apk add -U --no-cache mariadb
+ENV MYSQL_ROOT_PASSWORD=ASdf456+
+ENV MYSQL_USER=drupal
+ENV MYSQL_PASSWORD=drupal
+RUN yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm -y
+RUN echo '    CREATE DATABASE drupal CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;' > script.mysql
+RUN ls
+RUN yum install telnet -y
+RUN yum install mc -y
+RUN echo '[mysql]' >> ~/my.cnf 
+RUN echo 'user=root' >> ~/my.cnf 
+RUN echo 'password=ASdf456+' >> ~/my.cnf 
 
-# Fix permissions to allow for running on openshift
-COPY fix-permissions.sh ./
-RUN chmod +x ./fix-permissions.sh && \
-    ./fix-permissions.sh /var/lib/mysql/   && \
-    # ./fix-permissions.sh /var/log/mariadb/ ; \
-    ./fix-permissions.sh /var/run/
+RUN cat /etc/my.cnf  
+# RUN telnet 127.0.0.1:3306
 
-COPY docker-entrypoint.sh /
-RUN chmod +x ./docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]
+RUN echo 'CREATE DATABASE drupal CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;' >> mysql.mysql
+RUN echo 'ALTER USER 'drupal'@'%' IDENTIFIED WITH mysql_native_password BY 'drupal'; ' >> mysql.mysql
+RUN echo 'GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES ON drupal.* TO 'drupal'@'%';' >> mysql.mysql
 
-# Place VOLUME statement below all changes to /var/lib/mysql
-VOLUME /var/lib/mysql
-
-# By default will run as random user on openshift and the mysql user (27)
-# everywhere else
-# USER 27
-
+RUN cat mysql.mysql
 EXPOSE 3306
-CMD ["mysqld_safe"]
+# ENTRYPOINT [ "mysql -uroot < /mysql.mysql" ]
+
