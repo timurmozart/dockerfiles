@@ -27,8 +27,6 @@ RUN apk --update add ca-certificates \
  && echo "https://dl.bintray.com/php-alpine/v3.9/php-7.3" >> /etc/apk/repositories \
  && apk add -U --no-cache ${APKS} \
  && mkdir -p /var/www/drupal \
-#  && mkdir /run/nginx/ \
-#  && mkdir /run/php-fpm7/ \
  && chown -R nginx:nginx /var/lib/nginx \
  && chown -R nginx:nginx /var/www \
  && chown -R nginx:nginx /var/log/nginx \
@@ -44,11 +42,6 @@ RUN cd /var/www/drupal \
  && composer create-project drupal-composer/drupal-project:8.x-dev some-dir --stability dev --no-interaction \
  && cp -r some-dir/. ./ && rm -rf some-dir/
 
-
-
-
-# RUN composer create-project drupal/recommended-project /var/www/drupal --no-interaction
-# RUN composer require drush/drush
 RUN chown -R nginx:nginx /var/www/
 
 COPY ./copy/start.sh /files/start.sh
