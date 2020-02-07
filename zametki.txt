@@ -14,4 +14,11 @@ quit;
 
 
 
-docker kill anpd ; docker build -t mozartua/nginx-php-drupal:alpine --rm dockerfiles/alpine/nginx-php-drupal/ && docker run --name anpd --link mysql:mysql --rm -v ~/volumes/www:/www1 -itd -p 8080:8080 mozartua/nginx-php-drupal:alpine
+docker kill anpd ; docker build -t mozartua/nginx-php-drupal:alpine --rm Dockerfiles/alpine/nginx-php-drupal/ && docker run --name anpd --link mysql:mysql --rm -v ~/volumes/www:/www1 -itd -p 8080:8080 mozartua/nginx-php-drupal:alpine
+
+docker pull drupal:latest
+docker pull mariadb
+
+docker run -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE=drupal8 -e MYSQL_USER=drupal8 -e MYSQL_PASSWORD=drupal8 -v mariadb:/var/lib/mysql -d --name mariadb mariadb
+
+docker kill drupal8 ; docker rm drupal8 ; docker run --name drupal8 --link mariadb:mysql -p 80:80 -d drupal:8.8.2-fpm-alpine
