@@ -37,7 +37,7 @@ RUN apk --update add ca-certificates \
  && echo "${TIMEZONE}" > /etc/timezone
 COPY ./copy/php.ini /etc/php7/php.ini
 COPY ./copy/nginx.conf /etc/nginx/nginx.conf 
-
+# RUN mkdir /var/www/drupal
 RUN cd /var/www/drupal \
  && composer create-project drupal-composer/drupal-project:8.x-dev some-dir --stability dev --no-interaction \
  && cp -r some-dir/. ./ && rm -rf some-dir/
