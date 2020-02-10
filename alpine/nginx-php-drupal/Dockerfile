@@ -2,15 +2,15 @@ FROM alpine:latest
 ENV TIMEZONE="Europe/Kiev"
 ENV APKS \
     nginx \  
-    php-cli \
+    # php-cli \
     php-fpm \
     php-mysqli \
-    php-json \
+    # php-json \
     php-opcache \
     php-mbstring \
     php-xml \
     php-gd \
-    php-curl \
+    # php-curl \
     php-dom \
     php-pdo \
     php-pdo_mysql \
@@ -18,8 +18,8 @@ ENV APKS \
     php-simplexml \
     php-tokenizer \
     git \
-    mc \
-    tree \
+    # mc \
+    # tree \
     composer
 
 
@@ -41,7 +41,7 @@ RUN cp files/php.ini /etc/php7/php.ini \
  && tar -xzf /files/drupal-8.8.2.tar.gz \
  && mv /drupal-8.8.2/ /drupal/ \
  && mv /drupal /var/www/ \
- && cd /var/www/drupal/ && composer install -o --no-progress --profile --prefer-dist \
+ && cd /var/www/drupal/ && composer install -o --no-cache \
  && rm -rf /files/drupal* \
  && chown -R nginx:nginx /var/www/
 EXPOSE 8080
