@@ -19,6 +19,7 @@ ENV APKS \
     php-tokenizer \
     git \
     mc \
+    tree \
     composer
 
 
@@ -26,7 +27,6 @@ ADD https://dl.bintray.com/php-alpine/key/php-alpine.rsa.pub /etc/apk/keys/php-a
 RUN apk --update add ca-certificates \
  && echo "https://dl.bintray.com/php-alpine/v3.9/php-7.3" >> /etc/apk/repositories \
  && apk add -U --no-cache ${APKS} \
- && mkdir -p /var/www/drupal \
  && chown -R nginx:nginx /var/lib/nginx \
  && chown -R nginx:nginx /var/www \
  && chown -R nginx:nginx /var/log/nginx \
@@ -35,16 +35,15 @@ RUN apk --update add ca-certificates \
  && touch /var/run/nginx/nginx.pid \
  && chown -R nginx:nginx /var/run/nginx/nginx.pid \
  && echo "${TIMEZONE}" > /etc/timezone
-COPY ./copy/php.ini /etc/php7/php.ini
-COPY ./copy/nginx.conf /etc/nginx/nginx.conf 
-# RUN mkdir /var/www/drupal
-RUN cd /var/www/drupal \
- && composer create-project drupal-composer/drupal-project:8.x-dev some-dir --stability dev --no-interaction \
- && cp -r some-dir/. ./ && rm -rf some-dir/
-
-RUN chown -R nginx:nginx /var/www/
-
-COPY ./copy/start.sh /files/start.sh
+COPY ./copy /files
+RUN cp files/php.ini /etc/php7/php.ini \
+ && cp files/nginx.conf /etc/nginx/nginx.conf \
+ && tar -xzf /files/drupal-8.8.2.tar.gz \
+ && mv /drupal-8.8.2/ /drupal/ \
+ && mv /drupal /var/www/ \
+ && cd /var/www/drupal/ && composer install -o --no-progress --profile --prefer-dist \
+ && rm -rf /files/drupal* \
+ && chown -R nginx:nginx /var/www/
 EXPOSE 8080
-# USER nginx
+USER nginx
 CMD [ "/files/start.sh" ]
