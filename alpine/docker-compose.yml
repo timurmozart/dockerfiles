@@ -1,7 +1,7 @@
 version: '3'
 services:
 
-  #Nginx Service
+  #Drupal Service
   webserver:
     build: ./nginx-php-drupal
     container_name: anpd
@@ -11,6 +11,14 @@ services:
       - "443:443"
     networks:
       - app-network
+    volumes:
+      - .volumes/modules:/var/www/drupal/web/modules
+      - .volumes/profiles:/var/www/drupal/web/profiles
+      - .volumes/themes:/var/www/drupal/web/themes
+      # this takes advantage of the feature in Docker that a new anonymous
+      # volume (which is what we're creating here) will be initialized with the
+      # existing content of the image at the same location
+      - .volumes/sites:/var/www/sites
 
   #MySQL Service
   db:
@@ -26,3 +34,11 @@ services:
 networks:
   app-network:
     driver: bridge
+
+
+#Volumes
+volumes:
+  modules:
+  profiles:
+  themes:
+  sites:

@@ -46,5 +46,5 @@ RUN chown -R nginx:nginx /var/www/
 
 COPY ./copy/start.sh /files/start.sh
 EXPOSE 8080
-USER nginx
+# USER nginx
 CMD [ "/files/start.sh" ]
