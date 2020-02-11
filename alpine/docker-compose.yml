@@ -12,13 +12,10 @@ services:
     networks:
       - app-network
     volumes:
-      - .volumes/modules:/var/www/drupal/web/modules
-      - .volumes/profiles:/var/www/drupal/web/profiles
-      - .volumes/themes:/var/www/drupal/web/themes
-      # this takes advantage of the feature in Docker that a new anonymous
-      # volume (which is what we're creating here) will be initialized with the
-      # existing content of the image at the same location
-      - .volumes/sites:/var/www/sites
+      - modules:/var/www/drupal/web/modules
+      - profiles:/var/www/drupal/web/profiles
+      - themes:/var/www/drupal/web/themes
+      - sites:/var/www/sites
 
   #MySQL Service
   db:
@@ -29,7 +26,9 @@ services:
       - "3306:3306"
     networks:
       - app-network
-
+    volumes:
+      - databases:/var/lib/mysql
+  
 #Docker Networks
 networks:
   app-network:
@@ -42,3 +41,4 @@ volumes:
   profiles:
   themes:
   sites:
+  databases:
