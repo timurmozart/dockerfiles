@@ -5,7 +5,6 @@ docker kill cnps ; docker build -t mozartua/source-nginx-php:centos --rm /mnt/ho
 docker run --name mysql -id -e MYSQL_ROOT_PASSWORD=ASdf456+ mysql:latest
 docker kill cnpd ; time docker build -t mozartua/nginx-php-drupal:centos --rm /mnt/host_machine/Dockerfiles/centos-7/nginx-php-drupal/ && docker docker kill cnpd ; time docker build -t mozartua/nginx-php-drupal:centos --rm /mnt/host_machine/Dockerfiles/centos-7/nginx-php-drupal/ && docker run --name cnp --rm -idt -p 80:80 mozartua/nginx-php-drupal:centos
 run --name cnpd --rm -idt -p 80:80 mozartua/nginx-php-drupal:centos
-watch 'docker ps -a --format "table {{.Status}}\t{{.Ports}}\t{{.Names}}"'
 docker kill mysql; docker run --rm --name mysql -e MYSQL_ROOT_PASSWORD=ASdf456+ -e MYSQL_USER=drupal -e MYSQL_PASSWORD=drupal -d mysql/mysql-server:latest && sleep 33 && docker exec -it mysql mysql -uroot -pASdf456+ 
 CREATE DATABASE drupal CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci; 
 ALTER USER 'drupal'@'%' IDENTIFIED WITH mysql_native_password BY 'drupal'; 
@@ -22,3 +21,5 @@ docker pull mariadb
 docker run -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE=drupal8 -e MYSQL_USER=drupal8 -e MYSQL_PASSWORD=drupal8 -v mariadb:/var/lib/mysql -d --name mariadb mariadb
 
 docker kill drupal8 ; docker rm drupal8 ; docker run --name drupal8 --link mariadb:mysql -p 80:80 -d drupal:8.8.2-fpm-alpine
+
+watch 'docker ps -a --format "table {{.Status}}\t{{.Ports}}\t{{.Names}}"'
